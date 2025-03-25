@@ -1,0 +1,162 @@
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #1a1a1a; /* Grayish-black background */
+  color: #fff; /* White text for better contrast */
+  height: 100vh;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+/* App Container */
+.app-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: #1a1a1a; /* Grayish-black background */
+  position: relative; /* For positioning the brand name */
+}
+
+/* Brand Name */
+.brand-name {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Left Side: Voice Listener */
+.voice-listener {
+  flex: 0 0 150px; /* Increased width for more space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a; /* Match the background */
+}
+
+.voice-circle {
+  width: 100px; /* Bigger circle */
+  height: 100px; /* Bigger circle */
+  background-color: #007bff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 32px; /* Bigger icon */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.voice-circle:hover {
+  background-color: #0056b3;
+}
+
+/* Right Side: Chatbot Interface */
+.chatbot-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
+  align-items: center; /* Center the initial text */
+  background-color: #262626; /* Slightly lighter gray for the chat interface */
+  padding: 20px;
+  position: relative; /* For positioning the chat input */
+}
+
+/* Initial Text */
+.initial-text {
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 10px; /* Increased margin for better spacing */
+  margin-top: 60px; /* Adjusted margin for better vertical centering */
+}
+
+.initial-text-main {
+  font-size: 30px; /* Larger font size for "Hi! I am Ruhh!" */
+  font-weight: bold;
+  margin-bottom: 10px; /* Space between the two lines */
+}
+
+.initial-text-sub {
+  font-size: 24px; /* Smaller font size for "How are you feeling today?" */
+  color: #ccc; /* Lighter color for the subtitle */
+}
+
+/* Chat Messages */
+.chat-messages {
+  flex: 1;
+  width: 100%;
+  max-width: 800px; /* Limit width for better readability */
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.message {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  max-width: 70%;
+}
+
+.message.user {
+  background-color: #007bff;
+  color: #fff;
+  align-self: flex-end;
+}
+
+.message.bot {
+  background-color: #404040; /* Dark gray for bot messages */
+  color: #fff;
+  align-self: flex-start;
+}
+
+/* Chat Input Box */
+.chat-input {
+  display: flex;
+  gap: 10px;
+  background-color: #333; /* Dark gray for the input box */
+  padding: 10px;
+  border-radius: 20px; /* Rounded corners */
+  width: 100%;
+  height: 65px;
+  max-width: 700px; /* Limit width for better readability */
+  position: absolute; /* Position the input box */
+  bottom: 50%; /* Initially in the center */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, 50%); /* Center horizontally and vertically */
+  transition: bottom 0.3s ease; /* Smooth transition */
+}
+
+.chat-input-bottom {
+  bottom: 20px; /* Move to bottom after chat starts */
+  transform: translateX(-50%); /* Center horizontally */
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #404040; /* Dark gray for input */
+  color: #fff; /* White text */
+}
+
+.chat-input button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-input button:hover {
+  background-color: #0056b3;
+}
