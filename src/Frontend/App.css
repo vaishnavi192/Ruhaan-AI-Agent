@@ -22,37 +22,30 @@ body {
 .brand-name {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 8px;
   font-size: 24px;
   font-weight: bold;
   color: #fff;
 }
-
-/* Left Side: Voice Listener */
 .voice-listener {
-  flex: 0 0 150px; /* Increased width for more space */
+  font:30px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #1a1a1a; /* Match the background */
+  justify-content: center;  /* Centers horizontally */
+  align-items: center;      /* Centers vertically */
+  width: 10%;              /* Optional: ensures full width */
+  height: 10%;             /* Optional: ensures full height */
+  position: relative;       /* Ensures any absolutely positioned children are relative to this */
+  transform: translateY(400%);
 }
 
-.voice-circle {
-  width: 100px; /* Bigger circle */
-  height: 100px; /* Bigger circle */
-  background-color: #007bff;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  font-size: 32px; /* Bigger icon */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
 
-.voice-circle:hover {
-  background-color: #0056b3;
+.voice-circle.recording {
+  background-color: #0323a3; /* Change background color when recording */
+}
+.mic-image {
+  width: 170px;
+  height: 200px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 /* Right Side: Chatbot Interface */
@@ -65,6 +58,7 @@ body {
   background-color: #262626; /* Slightly lighter gray for the chat interface */
   padding: 20px;
   position: relative; /* For positioning the chat input */
+  overflow-y: auto;
 }
 
 /* Initial Text */
