@@ -1,2 +1,2 @@
 ## RuhaanAI Agent
-Hey There! Ruhh Here, Saying Hi!
+Hey There! I am Ruhh, Saying Hi!
