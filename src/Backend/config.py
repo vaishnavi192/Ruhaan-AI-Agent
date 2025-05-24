@@ -8,6 +8,8 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 ELEVEN_API_KEY = os.getenv("ELEVEN_API_KEY")
 
-# Initialize once, reuse everywhere
+
+# Initialize clients
 groq_client = groq.Groq(api_key=GROQ_API_KEY)
 elevenlabs_client = ElevenLabs(api_key=ELEVEN_API_KEY)
+
