@@ -1,7 +1,9 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000"; 
+// --- Change this URL to your deployed Railway backend URL ---
+const API_BASE_URL = "https://YOUR-RAILWAY-BACKEND-URL.railway.app"; // REPLACE THIS WITH YOUR ACTUAL RAILWAY BACKEND URL
+// -----------------------------------------------------------
 
 const MicRecorder = ({ setMessages }) => {
   const [isRecording, setIsRecording] = useState(false);
