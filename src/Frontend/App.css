@@ -79,39 +79,36 @@ body {
 }
 
 .chatbot-interface {
-  /* height: 100vh; Removed */
   flex: 1;
   display: flex;
   overflow-y: auto;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center; /* Changed back to center for overall chat container alignment */
   background-color: #262626;
   padding: 1.25rem;
   position: relative;
-  /* overflow-y: auto; Removed to allow body scroll */
   width: 100%; /* Adjusted width */
   box-sizing: border-box; /* Include padding in width */
   padding-top: 5rem; /* Add padding top to account for fixed brand name */
-  border-left: 1px solid #383737; /* Add left border for partition */
-  margin-left: 18.75rem; /* Add margin to shift content to the right */
+  border-left: 1px solid #555151; /* Restored left border */
+  margin-left: 18.75rem; /* Restored margin for sidebar separation */
+  min-height: 100vh; /* Ensure full background */
 }
 
 .chat-messages {
   flex: 1;
   width: 100%;
-  max-width: 75rem;
-  overflow-y: auto; /* Add scrolling here */
-  padding: 1.25rem; /* Add overall padding */
+  max-width: 60rem; /* Keep original max-width for chat area */
+  padding: 1.25rem;
   margin-bottom: 1.25rem;
-  padding-bottom: 7.5rem; /* Increase padding bottom for chat input */
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box; /* Include padding in width */
-  display: flex; /* Make it a flex container */
-  flex-direction: column; /* Stack items vertically */
-  justify-content: flex-start; /* Vertically center content */
-  align-items: center; /* Horizontally center content */
+  padding-bottom: 7.5rem;
+  margin-right: 55rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .initial-text {
@@ -144,39 +141,56 @@ body {
 .message.user {
   background-color: #007bff;
   color: #fff;
-  align-self: flex-end; /* Align user messages to the right */
-  width: 80%;
+  align-self: flex-end;
+  margin-right: -8rem;
+  margin-left: auto;
+  max-width: 62%;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.3125rem;
 }
 
 .message.bot {
-  background-color: #404040;
+  background-color: transparent;
   color: #fff;
-  align-self: flex-start; /* Align bot messages to the left */
-  max-width: 95%; /* Keep same max-width as user messages */
-  margin-left: 20px; /* Add left margin to bot messages */
-  margin-right: 20px; /* Add right margin to bot messages */
+  align-self: flex-start;
+  margin-left: 0.5rem;
+  margin-right: auto;
+  max-width: 62%;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.3125rem;
 }
-
 
 /* Structured Response Styles */
 .structured-response {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjusted for better width distribution */
-  gap: 10px;
-  width: 100%;
-  padding: 5px; /* Reduced from 10px */
-  padding-right: 5px; /* Revert right padding for structured response grid */
-  /* margin-right: 8px; Removed */
-  box-sizing: border-box; /* Include padding in width */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
 .response-box {
-  background-color: #2a2a2a;
-  border: 2px solid;
+  min-width: 0;
+  width: 300px;
+  min-height: 140px;
+  max-width: 300px;
+  max-height: 160px;
+  background: transparent;
+  border: 2px solid #555151;
   border-radius: 8px;
-  padding: 12px; /* Reduced from 15px */
-  margin: 3px 0; /* Reduced from 5px */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  margin: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-size: 0.93rem;
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .response-box h3 {
@@ -203,13 +217,14 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .structured-response {
     grid-template-columns: 1fr;
   }
   
   .response-box {
     margin: 3px 0;
+    
   }
   
   .chat-messages {
