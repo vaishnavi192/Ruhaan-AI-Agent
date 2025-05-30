@@ -86,7 +86,7 @@ const MicRecorder = ({ setMessages }) => {
   return (
     <div className="voice-listener" onClick={isRecording ? stopRecording : startRecording}>
       <div className={`voice-circle ${isRecording ? "recording" : ""}`}>
-        <img src="/assets/ruhhhh.png" alt="Mic" className="mic-image" />
+        <img src="/ruhhhh.png" alt="Mic" className="mic-image" />
       </div>
       {transcription && <p><b>Transcription:</b> {transcription}</p>}
     </div>
