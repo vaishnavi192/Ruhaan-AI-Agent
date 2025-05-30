@@ -5,7 +5,6 @@ import { processTextQuery, textToSpeech } from "./api";
 const Chatbot = ({ messages, setMessages }) => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const [expandedSections, setExpandedSections] = useState({});
 
   useEffect(() => {
     if (messagesEndRef.current) {
