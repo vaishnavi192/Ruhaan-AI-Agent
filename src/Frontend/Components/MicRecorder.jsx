@@ -69,6 +69,7 @@ const MicRecorder = ({ setMessages }) => {
         } catch (error) {
           console.error("Error:", error);
           setTranscription("Error processing audio");
+         
         }
       };
 

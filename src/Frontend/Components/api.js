@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://ruhaan-ai-agent.onrender.com"; 
+const API_BASE_URL = "http://localhost:8000"; 
 
 //Speech-to-Text 
 export const transcribeAudio = async (audioFile) => {

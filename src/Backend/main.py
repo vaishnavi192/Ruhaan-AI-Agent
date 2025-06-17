@@ -15,7 +15,7 @@ app = FastAPI()
 # CORS middleware to allow frontend to talk to backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ruhaan-ai-agent.vercel.app"],  
+    allow_origins=["http://localhost:5173"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
