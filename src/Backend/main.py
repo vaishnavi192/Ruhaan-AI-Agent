@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv 
 import uvicorn 
+from fastapi.staticfiles import StaticFiles
+
 load_dotenv()
 #venv312\Scripts\activate
 #uvicorn src.Backend.main:app --reload 
@@ -22,6 +24,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"]  # Allow all headers to be exposed
+)
+
+# Serve static files from the 'public' directory at '/static'
+app.mount(
+    "/static",
+    StaticFiles(directory=os.path.join(os.path.dirname(__file__), "../../public")),
+    name="static"
 )
 
 # Route registrations

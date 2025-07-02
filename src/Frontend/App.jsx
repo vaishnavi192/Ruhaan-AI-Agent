@@ -118,7 +118,7 @@ function App() {
         <div className="voice-listener" onClick={handleLogoClick}>
           <div className="logo-container">
             <img 
-              src="/ruhhhh.png" 
+              src="/public/ruhhhh.png" 
               alt="AI Avatar" 
               className={`mic-image ${isRecording ? 'recording' : ''}`}
             />
