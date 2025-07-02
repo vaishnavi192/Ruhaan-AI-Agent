@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000"; 
+const API_BASE_URL = "http://127.0.0.1:8000"; // Fixed URL to match backend 
 
 //Speech-to-Text 
 export const transcribeAudio = async (audioFile) => {
@@ -8,7 +8,7 @@ export const transcribeAudio = async (audioFile) => {
   formData.append("file", audioFile);
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/speech/transcribe`, formData, {
+    const response = await axios.post(`${API_BASE_URL}/api/speech/transcribe/`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     if (response.data.status === "success") {
@@ -22,10 +22,11 @@ export const transcribeAudio = async (audioFile) => {
 };
 
 // Process Text Query (AI Response from Groq)
-export const processTextQuery = async (message) => {
+export const processTextQuery = async (message, language_code) => {
   try {
+    const payload = language_code ? { message, language_code } : { message };
     const response = await axios.post(`${API_BASE_URL}/api/chat`, 
-      { message },  
+      payload,  
       { headers: { "Content-Type": "application/json" } }
     );
     return response.data;

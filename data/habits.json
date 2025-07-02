@@ -1,0 +1,68 @@
+{
+  "read books": {
+    "dates": [
+      "2025-07-02",
+      "2025-07-01"
+    ],
+    "streak": 2,
+    "last_date": "2025-07-02",
+    "best_streak": 2,
+    "total_days": 2
+  },
+  "went gym": {
+    "dates": [
+      "2025-07-02",
+      "2025-07-01"
+    ],
+    "streak": 2,
+    "last_date": "2025-07-02",
+    "best_streak": 2,
+    "total_days": 2
+  },
+  "eat food": {
+    "dates": [
+      "2025-07-02",
+      "2025-07-01"
+    ],
+    "streak": 2,
+    "last_date": "2025-07-02",
+    "best_streak": 2,
+    "total_days": 2
+  },
+  "gg ko pagal bolo": {
+    "dates": [
+      "2025-07-02"
+    ],
+    "streak": 1,
+    "last_date": "2025-07-02",
+    "best_streak": 1,
+    "total_days": 1
+  },
+  "do a coding project": {
+    "dates": [
+      "2025-07-02"
+    ],
+    "streak": 1,
+    "last_date": "2025-07-02",
+    "best_streak": 1,
+    "total_days": 1
+  },
+  "did exercise": {
+    "dates": [
+      "2025-07-02"
+    ],
+    "streak": 1,
+    "last_date": "2025-07-02",
+    "best_streak": 1,
+    "total_days": 1
+  },
+  "went library": {
+    "dates": [
+      "2025-07-02"
+    ],
+    "streak": 1,
+    "last_date": "2025-07-02",
+    "best_streak": 1,
+    "total_days": 1
+  }
+}
