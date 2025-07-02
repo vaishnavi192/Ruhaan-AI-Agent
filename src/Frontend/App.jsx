@@ -1,15 +1,17 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Chatbot from "./Components/Chatbot";
 import MicRecorder from "./Components/MicRecorder";
 import GoalBreakdown from "./Components/GoalBreakdown";
 import HabitLogger from "./Components/HabitLogger";
 import { requestNotificationPermission, scheduleReminderNotification } from "./utils/reminderNotifications";
+import RuhaanAnalytics from "./utils/analytics";
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [currentView, setCurrentView] = useState('chat'); // 'chat', 'goals', 'habits'
   const [isRecording, setIsRecording] = useState(false);
+  const analytics = useRef(new RuhaanAnalytics()).current;
 
   const handleLogoClick = () => {
     // Toggle recording state and pass to MicRecorder
@@ -18,7 +20,22 @@ function App() {
 
   useEffect(() => {
     requestNotificationPermission();
-  }, []);
+    
+    // Track session start
+    analytics.trackSessionStart();
+    
+    // Track session end on page unload
+    const handleBeforeUnload = () => {
+      analytics.trackSessionEnd();
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      analytics.trackSessionEnd();
+    };
+  }, [analytics]);
 
   // Listen for new reminder messages and schedule notifications
   useEffect(() => {
@@ -38,6 +55,8 @@ function App() {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'goals':
+        // Track feature usage
+        analytics.trackFeatureUsed('goals');
         return (
           <>
             <div className="navigation-bar">
@@ -58,6 +77,8 @@ function App() {
           </>
         );
       case 'habits':
+        // Track feature usage
+        analytics.trackFeatureUsed('habits');
         return (
           <>
             <div className="navigation-bar">
@@ -98,10 +119,12 @@ function App() {
               setMessages={setMessages} 
               isRecording={isRecording}
               setIsRecording={setIsRecording}
+              analytics={analytics}
             />
             <Chatbot 
               messages={messages} 
               setMessages={setMessages}
+              analytics={analytics}
             />
           </>
         );
