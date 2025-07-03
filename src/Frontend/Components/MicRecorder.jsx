@@ -6,7 +6,7 @@ import { playTTS } from "./playTTS";
 const API_BASE_URL = "http://127.0.0.1:8000"; // Fixed URL to match backend
 // -----------------------------------------------------------
 
-const MicRecorder = ({ setMessages, isRecording, setIsRecording }) => {
+const MicRecorder = ({ setMessages, isRecording, setIsRecording, analytics }) => {
   const [transcription, setTranscription] = useState("");
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
@@ -74,6 +74,13 @@ const MicRecorder = ({ setMessages, isRecording, setIsRecording }) => {
             
             const displayTranscription = cleanTranscriptionForDisplay(transcription, language_code);
             setTranscription(displayTranscription);
+            
+            // Track voice usage analytics
+            const audioDuration = audioBlob.size / 1000; // Rough estimate
+            if (analytics) {
+              analytics.trackVoiceUsage(audioDuration);
+              analytics.trackMessageSent('voice', displayTranscription.length);
+            }
             
             // Handle different response types
             if (type === "structured") {

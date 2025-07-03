@@ -4,7 +4,7 @@ import { processTextQuery } from "./api";
 import { playTTS } from "./playTTS";
 import { requestNotificationPermission, scheduleReminderNotification } from "../utils/reminderNotifications";
 
-const Chatbot = ({ messages, setMessages }) => {
+const Chatbot = ({ messages, setMessages, analytics }) => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -35,9 +35,23 @@ const Chatbot = ({ messages, setMessages }) => {
     const userMessage = { text: messageText, sender: "user" };
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
+    
+    // Track message analytics
+    if (analytics) {
+      analytics.trackMessageSent('text', messageText.length);
+    }
+    
+    const startTime = Date.now();
   
     try {
       const response = await processTextQuery(messageText, languageCode);
+      
+      // Track AI response time
+      const responseTime = Date.now() - startTime;
+      if (analytics) {
+        analytics.trackAIResponse(responseTime);
+      }
+      
       console.log("Backend Response:", response); // Debug log
       
       // Robustly extract backend response fields and handle stringified JSON

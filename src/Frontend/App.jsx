@@ -4,12 +4,13 @@ import Chatbot from "./Components/Chatbot";
 import MicRecorder from "./Components/MicRecorder";
 import GoalBreakdown from "./Components/GoalBreakdown";
 import HabitLogger from "./Components/HabitLogger";
+import ProtectedAnalytics from "./Components/ProtectedAnalytics";
 import { requestNotificationPermission, scheduleReminderNotification } from "./utils/reminderNotifications";
 import RuhaanAnalytics from "./utils/analytics";
 
 function App() {
   const [messages, setMessages] = useState([]);
-  const [currentView, setCurrentView] = useState('chat'); // 'chat', 'goals', 'habits'
+  const [currentView, setCurrentView] = useState('chat'); // 'chat', 'goals', 'habits', 'analytics'
   const [isRecording, setIsRecording] = useState(false);
   const analytics = useRef(new RuhaanAnalytics()).current;
 
@@ -29,10 +30,19 @@ function App() {
       analytics.trackSessionEnd();
     };
     
+    // Secret key combination for analytics access (Ctrl+Shift+A)
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        setCurrentView('analytics');
+      }
+    };
+    
     window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('keydown', handleKeyDown);
     
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('keydown', handleKeyDown);
       analytics.trackSessionEnd();
     };
   }, [analytics]);
@@ -73,7 +83,7 @@ function App() {
                 📊 Habits
               </button>
             </div>
-            <GoalBreakdown onBack={() => setCurrentView('chat')} />
+            <GoalBreakdown onBack={() => setCurrentView('chat')} analytics={analytics} />
           </>
         );
       case 'habits':
@@ -95,9 +105,13 @@ function App() {
                 📊 Habits
               </button>
             </div>
-            <HabitLogger onBack={() => setCurrentView('chat')} />
+            <HabitLogger onBack={() => setCurrentView('chat')} analytics={analytics} />
           </>
         );
+      case 'analytics':
+        // Track feature usage
+        analytics.trackFeatureUsed('analytics');
+        return <ProtectedAnalytics onBack={() => setCurrentView('chat')} />;
       default:
         return (
           <>

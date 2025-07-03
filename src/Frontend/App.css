@@ -87,6 +87,11 @@ body {
   border-color: #06b6d4;
 }
 
+.analytics-btn:hover {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border-color: #8b5cf6;
+}
+
 /* Brand Name */
 .brand-name {
   padding: 1.5rem 1rem;

@@ -17,15 +17,31 @@ class RuhaanAnalytics {
       });
     }
     
+    // Track return user patterns
+    this.trackReturnUser();
+    
+    // Start page visibility tracking
+    this.visibilityCleanup = this.trackPageVisibility();
+    
     // Custom backend tracking
     this.logEvent('session_start', {
       timestamp: Date.now(),
-      user_id: this.userId
+      user_id: this.userId,
+      user_frequency: this.getReturnFrequency(),
+      session_id: this.getSessionId()
     });
   }
 
   trackSessionEnd() {
     const duration = (Date.now() - this.sessionStart) / (1000 * 60);
+    
+    // Track detailed time spent metrics
+    this.trackDetailedTimeSpent();
+    
+    // Cleanup page visibility tracking
+    if (this.visibilityCleanup) {
+      this.visibilityCleanup();
+    }
     
     // Google Analytics
     if (typeof gtag !== 'undefined') {
@@ -41,6 +57,7 @@ class RuhaanAnalytics {
       total_messages: this.messageCount,
       voice_usage_count: this.voiceUsageCount,
       features_used: Array.from(this.featuresUsed),
+      engagement_score: this.calculateEngagementScore(),
       user_id: this.userId
     });
   }
@@ -207,7 +224,166 @@ class RuhaanAnalytics {
       // Track new user registration
       this.logEvent('new_user_registered', { user_id: userId });
     }
+    
+    // Track daily and monthly activity
+    this.trackUserActivity();
+    
     return userId;
+  }
+
+  trackUserActivity() {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const thisMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+    
+    // Track daily active user
+    const lastActiveDay = localStorage.getItem('ruhaan_last_active_day');
+    if (lastActiveDay !== today) {
+      localStorage.setItem('ruhaan_last_active_day', today);
+      this.logEvent('daily_active_user', {
+        user_id: this.userId,
+        date: today,
+        previous_active_day: lastActiveDay
+      });
+    }
+    
+    // Track monthly active user
+    const lastActiveMonth = localStorage.getItem('ruhaan_last_active_month');
+    if (lastActiveMonth !== thisMonth) {
+      localStorage.setItem('ruhaan_last_active_month', thisMonth);
+      this.logEvent('monthly_active_user', {
+        user_id: this.userId,
+        month: thisMonth,
+        previous_active_month: lastActiveMonth
+      });
+    }
+  }
+
+  // Enhanced session tracking with detailed time metrics
+  trackDetailedTimeSpent() {
+    const sessionDuration = (Date.now() - this.sessionStart) / 1000; // seconds
+    const timeSpentInteracting = this.calculateInteractionTime();
+    
+    this.logEvent('time_spent_detailed', {
+      user_id: this.userId,
+      session_duration_seconds: sessionDuration,
+      interaction_time_seconds: timeSpentInteracting.total,
+      idle_time_seconds: sessionDuration - timeSpentInteracting.total,
+      interaction_events: timeSpentInteracting.events,
+      engagement_score: this.calculateEngagementScore(),
+      timestamp: Date.now()
+    });
+  }
+
+  calculateInteractionTime() {
+    // Calculate time spent actively interacting (not idle)
+    const events = JSON.parse(localStorage.getItem('ruhaan_analytics_events') || '[]');
+    const sessionEvents = events.filter(e => 
+      e.timestamp >= this.sessionStart && 
+      ['message_sent', 'voice_used', 'feature_used'].includes(e.event)
+    );
+    
+    let totalInteractionTime = 0;
+    let lastInteractionTime = this.sessionStart;
+    
+    sessionEvents.forEach(event => {
+      const timeSinceLastInteraction = event.timestamp - lastInteractionTime;
+      // Count as interaction time if less than 30 seconds between events
+      if (timeSinceLastInteraction < 30000) {
+        totalInteractionTime += timeSinceLastInteraction;
+      }
+      lastInteractionTime = event.timestamp;
+    });
+    
+    return {
+      total: totalInteractionTime / 1000, // convert to seconds
+      events: sessionEvents.length
+    };
+  }
+
+  calculateEngagementScore() {
+    // Calculate engagement score based on multiple factors (0-100)
+    let score = 0;
+    
+    // Message count (max 30 points)
+    score += Math.min(this.messageCount * 3, 30);
+    
+    // Voice usage (max 20 points)
+    score += Math.min(this.voiceUsageCount * 5, 20);
+    
+    // Feature diversity (max 25 points)
+    score += Math.min(this.featuresUsed.size * 8, 25);
+    
+    // Session duration (max 25 points)
+    const sessionMinutes = (Date.now() - this.sessionStart) / (1000 * 60);
+    score += Math.min(sessionMinutes * 2, 25);
+    
+    return Math.round(score);
+  }
+
+  // Track page visibility for accurate time measurement
+  trackPageVisibility() {
+    let isVisible = !document.hidden;
+    let visibilityStart = Date.now();
+    
+    const handleVisibilityChange = () => {
+      const now = Date.now();
+      
+      if (document.hidden && isVisible) {
+        // Page became hidden
+        const visibleDuration = now - visibilityStart;
+        this.logEvent('page_visibility', {
+          user_id: this.userId,
+          visible_duration_seconds: visibleDuration / 1000,
+          event_type: 'hidden'
+        });
+        isVisible = false;
+      } else if (!document.hidden && !isVisible) {
+        // Page became visible
+        visibilityStart = now;
+        this.logEvent('page_visibility', {
+          user_id: this.userId,
+          event_type: 'visible'
+        });
+        isVisible = true;
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Return cleanup function
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }
+
+  // Track user return patterns
+  trackReturnUser() {
+    const lastVisit = localStorage.getItem('ruhaan_last_visit');
+    const now = Date.now();
+    
+    if (lastVisit) {
+      const daysSinceLastVisit = (now - parseInt(lastVisit)) / (1000 * 60 * 60 * 24);
+      
+      this.logEvent('return_user', {
+        user_id: this.userId,
+        days_since_last_visit: daysSinceLastVisit,
+        last_visit_timestamp: parseInt(lastVisit),
+        return_frequency: this.getReturnFrequency()
+      });
+    }
+    
+    localStorage.setItem('ruhaan_last_visit', now.toString());
+  }
+
+  getReturnFrequency() {
+    const visits = JSON.parse(localStorage.getItem('ruhaan_visit_count') || '0');
+    const newVisitCount = visits + 1;
+    localStorage.setItem('ruhaan_visit_count', newVisitCount.toString());
+    
+    if (newVisitCount === 1) return 'first_time';
+    if (newVisitCount <= 3) return 'new_user';
+    if (newVisitCount <= 10) return 'regular_user';
+    return 'power_user';
   }
 
   hasUsedFeatureBefore(feature) {
@@ -237,7 +413,32 @@ class RuhaanAnalytics {
     // Store locally for offline analysis
     this.storeEventLocally(eventName, data);
   }
-
+  // Get DAU/MAU metrics (for backend analytics dashboard)
+  static getActivityMetrics() {
+    const events = JSON.parse(localStorage.getItem('ruhaan_analytics_events') || '[]');
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const thisMonth = now.toISOString().slice(0, 7);
+    
+    // Count unique users today
+    const todayEvents = events.filter(e => {
+      const eventDate = new Date(e.timestamp).toISOString().split('T')[0];
+      return eventDate === today && e.event === 'daily_active_user';
+    });
+    
+    // Count unique users this month
+    const monthEvents = events.filter(e => {
+      const eventDate = new Date(e.timestamp).toISOString().slice(0, 7);
+      return eventDate === thisMonth && e.event === 'monthly_active_user';
+    });
+    
+    return {
+      dailyActiveUsers: todayEvents.length,
+      monthlyActiveUsers: monthEvents.length,
+      totalEvents: events.length,
+      lastActivityDate: events.length > 0 ? new Date(events[events.length - 1].timestamp) : null
+    };
+  }
   getSessionId() {
     let sessionId = sessionStorage.getItem('ruhaan_session_id');
     if (!sessionId) {
@@ -265,15 +466,26 @@ class RuhaanAnalytics {
 
   // Get analytics summary for debugging
   getAnalyticsSummary() {
+    const interactionTime = this.calculateInteractionTime();
+    
     return {
       userId: this.userId,
       sessionDuration: (Date.now() - this.sessionStart) / (1000 * 60),
+      interactionTime: interactionTime.total / 60, // minutes
+      idleTime: ((Date.now() - this.sessionStart) / 1000 - interactionTime.total) / 60, // minutes
       messageCount: this.messageCount,
       voiceUsageCount: this.voiceUsageCount,
       featuresUsed: Array.from(this.featuresUsed),
-      localEvents: JSON.parse(localStorage.getItem('ruhaan_analytics_events') || '[]').length
+      engagementScore: this.calculateEngagementScore(),
+      userFrequency: this.getReturnFrequency(),
+      localEvents: JSON.parse(localStorage.getItem('ruhaan_analytics_events') || '[]').length,
+      lastActiveDay: localStorage.getItem('ruhaan_last_active_day'),
+      lastActiveMonth: localStorage.getItem('ruhaan_last_active_month'),
+      visitCount: parseInt(localStorage.getItem('ruhaan_visit_count') || '0')
     };
   }
+
+  
 }
 
 export default RuhaanAnalytics;

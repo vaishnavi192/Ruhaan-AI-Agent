@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './GoalBreakdown.css';
 
-const GoalBreakdown = ({ onBack }) => {
+const GoalBreakdown = ({ onBack, analytics }) => {
   const [goal, setGoal] = useState('');
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -11,6 +11,12 @@ const GoalBreakdown = ({ onBack }) => {
     if (!goal.trim()) return;
     
     setLoading(true);
+    
+    // Track goal creation analytics
+    if (analytics) {
+      analytics.trackGoalCreated(goal.toLowerCase(), 'medium'); // Default difficulty
+    }
+    
     try {
       const response = await fetch('http://localhost:8000/api/command/execute', {
         method: 'POST',
@@ -171,6 +177,12 @@ const GoalBreakdown = ({ onBack }) => {
     setTasks(tasks.map(task => {
       if (task.id === taskId) {
         const newCompleted = !task.completed;
+        
+        // Track goal completion analytics
+        if (newCompleted && analytics) {
+          analytics.trackGoalCompleted(task.title.toLowerCase());
+        }
+        
         // If marking main task as completed, mark all sub-tasks as completed
         if (newCompleted) {
           return {

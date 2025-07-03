@@ -24,6 +24,32 @@ from src.Backend.config import sarvam_client
 
 router = APIRouter()
 
+# Analytics tracking function
+async def track_command_analytics(command: str, command_type: str, success: bool = True):
+    """Track command execution analytics"""
+    try:
+        from .analytics import ANALYTICS_FILE
+        
+        event_data = {
+            "event": "command_executed",
+            "data": {
+                "command": command,
+                "command_type": command_type,
+                "success": success,
+                "timestamp": datetime.now().isoformat()
+            },
+            "client_timestamp": int(datetime.now().timestamp() * 1000),
+            "server_timestamp": int(datetime.now().timestamp() * 1000),
+            "session_id": f"backend_session_{int(datetime.now().timestamp())}"
+        }
+        
+        # Append to analytics file
+        with open(ANALYTICS_FILE, "a") as f:
+            f.write(json.dumps(event_data) + "\n")
+            
+    except Exception as e:
+        print(f"Analytics tracking error: {e}")
+
 # Simple Tool class to replace OpenManus Tool
 class Tool:
     def __init__(self, name: str, description: str, func):
@@ -451,15 +477,15 @@ $notification.Dispose()
         thread.start()
         
         print(f"🚀 Background reminder scheduled for {delay_seconds} seconds ({reminder_time})")
-        print(f"🕐 Current time: {datetime.now().strftime('%H:%M:%S')}")
-        print(f"🎯 Expected trigger time: {(datetime.now() + timedelta(seconds=delay_seconds)).strftime('%H:%M:%S')}")
+        print(f"🕐 Current time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"🎯 Expected trigger time: {(datetime.now() + timedelta(seconds=delay_seconds)).strftime('%Y-%m-%d %H:%M:%S')}")
         
         return {
             "message": f"⏰ Reminder set: '{content}' will pop up {reminder_time}",
             "reminder_text": content,
             "reminder_time": reminder_time,
             "will_popup": True,
-            "debug_info": f"Thread started, will trigger at {(datetime.now() + timedelta(seconds=delay_seconds)).strftime('%H:%M:%S')}"
+            "debug_info": f"Thread started, will trigger at {(datetime.now() + timedelta(seconds=delay_seconds)).strftime('%Y-%m-%d %H:%M:%S')}"
         }
     else:
         return {
@@ -1120,6 +1146,12 @@ async def get_response(command):
             print(f"Sarvam LLM Error: {e}")
             response = f"I couldn't understand the command: {command}. Try commands like 'remind me to...', 'note: ...', 'break down: ...', 'log habit: ...', or 'open chrome'."
     
+    # Track analytics for command execution
+    try:
+        await track_command_analytics(command, command_type, success=(response is not None))
+    except Exception as e:
+        print(f"Analytics tracking error: {e}")
+    
     return response
 
 # --- FastAPI endpoints ---
@@ -1132,6 +1164,27 @@ async def execute_command(request: CommandRequest):
             raise ValueError("'command' is required.")
         
         print(f"🔍 Processing command: {command}")
+        
+        # Determine command type for analytics
+        command_type = "unknown"
+        lower_command = command.lower().strip()
+        
+        if "remind" in lower_command:
+            command_type = "reminder"
+        elif "note:" in lower_command:
+            command_type = "note"
+        elif "break down:" in lower_command:
+            command_type = "goal_breakdown"
+        elif "log habit:" in lower_command:
+            command_type = "habit_log"
+        elif "open" in lower_command:
+            command_type = "browser"
+        elif "task:" in lower_command:
+            command_type = "quick_task"
+        
+        # Track command execution start
+        await track_command_analytics(command, command_type, True)
+        
         response = await get_response(command)
         print(f"📤 Response length: {len(str(response))} chars")
         print(f"📤 Response preview: {str(response)[:200]}...")
@@ -1143,6 +1196,11 @@ async def execute_command(request: CommandRequest):
             return {"response": str(response)}
     except Exception as e:
         print(f"❌ Error in execute_command: {e}")
+        # Track failed command execution
+        try:
+            await track_command_analytics(command if 'command' in locals() else "unknown", "error", False)
+        except:
+            pass
         raise HTTPException(status_code=500, detail=str(e))
 
 # --- Create list of all tools for API ---
@@ -1164,6 +1222,14 @@ async def get_reminders():
 @router.post("/ruhaan")
 async def run_agent(query: Query):
     try:
+        # Determine command type for analytics
+        command_type = "chat"
+        if is_command(query.prompt):
+            command_type = "command"
+        
+        # Track agent query
+        await track_command_analytics(query.prompt, command_type, True)
+        
         reply = await get_response(query.prompt)
         # Ensure reply is serializable
         if isinstance(reply, str):
@@ -1171,6 +1237,11 @@ async def run_agent(query: Query):
         else:
             return {"reply": str(reply)}
     except Exception as e:
+        # Track failed query
+        try:
+            await track_command_analytics(query.prompt if 'query' in locals() else "unknown", "error", False)
+        except:
+            pass
         return {"reply": f"Error processing request: {str(e)}"}
 
 ask_manus_agent = get_response

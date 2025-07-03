@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './HabitLogger.css';
 
-const HabitLogger = ({ onBack }) => {
+const HabitLogger = ({ onBack, analytics }) => {
   const [habits, setHabits] = useState([]);
   const [newHabit, setNewHabit] = useState('');
   const [loading, setLoading] = useState(false);
@@ -10,6 +10,12 @@ const HabitLogger = ({ onBack }) => {
     if (!newHabit.trim()) return;
     
     setLoading(true);
+    
+    // Track habit creation analytics
+    if (analytics) {
+      analytics.trackHabitLogged(newHabit.toLowerCase(), 1);
+    }
+    
     try {
       const response = await fetch('http://localhost:8000/api/command/execute', {
         method: 'POST',
@@ -48,6 +54,16 @@ const HabitLogger = ({ onBack }) => {
 
   const logHabit = async (habitName) => {
     setLoading(true);
+    
+    // Find current habit to get streak info
+    const currentHabit = habits.find(h => h.name === habitName);
+    const newStreak = currentHabit ? currentHabit.streak + 1 : 1;
+    
+    // Track habit logging analytics
+    if (analytics) {
+      analytics.trackHabitLogged(habitName, newStreak);
+    }
+    
     try {
       const response = await fetch('http://localhost:8000/api/command/execute', {
         method: 'POST',

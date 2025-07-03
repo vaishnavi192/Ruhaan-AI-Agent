@@ -1,0 +1,1 @@
+{"event": "command_executed", "data": {"command": "test command", "command_type": "test", "success": true, "timestamp": "2025-07-03T08:32:25.168844"}, "client_timestamp": 1751511745168, "server_timestamp": 1751511745168, "session_id": "backend_session_1751511745"}
