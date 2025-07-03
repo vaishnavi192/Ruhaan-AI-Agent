@@ -14,6 +14,7 @@ from src.Backend.routes.api_frontend import router as api_frontend_router
 from src.Backend.routes.speech import router as speech_router
 from src.Backend.routes.manusagent import router as manus_router
 from src.Backend.routes.analytics import router as analytics_router
+from src.Backend.routes.admin import router as admin_router
 
 app = FastAPI()
 
@@ -39,6 +40,7 @@ app.include_router(api_frontend_router, prefix="/api", tags=["Frontend API"])
 app.include_router(speech_router, prefix="/api/speech", tags=["Speech"])
 app.include_router(manus_router, prefix="/api/command", tags=["Commands"])
 app.include_router(analytics_router, prefix="/api/analytics", tags=["Analytics"])
+app.include_router(admin_router, prefix="/api/admin", tags=["Admin"])
 
 @app.get("/")
 async def root():

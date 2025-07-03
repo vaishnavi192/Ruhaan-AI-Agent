@@ -7,6 +7,7 @@ import HabitLogger from "./Components/HabitLogger";
 import ProtectedAnalytics from "./Components/ProtectedAnalytics";
 import { requestNotificationPermission, scheduleReminderNotification } from "./utils/reminderNotifications";
 import RuhaanAnalytics from "./utils/analytics";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -30,20 +31,10 @@ function App() {
       analytics.trackSessionEnd();
     };
     
-    // Secret key combination for analytics access (Ctrl+Alt+4)
-    const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.altKey && e.key === '4') {
-        e.preventDefault();
-        setCurrentView('analytics');
-      }
-    };
-    
     window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('keydown', handleKeyDown);
     
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('keydown', handleKeyDown);
       analytics.trackSessionEnd();
     };
   }, [analytics]);
@@ -177,6 +168,9 @@ function App() {
       >
         See Instructions to use Ruhaan
       </a>
+      
+      {/* Vercel Analytics */}
+      <Analytics />
     </div>
   );
 }
