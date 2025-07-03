@@ -30,9 +30,10 @@ function App() {
       analytics.trackSessionEnd();
     };
     
-    // Secret key combination for analytics access (Ctrl+Shift+A)
+    // Secret key combination for analytics access (Ctrl+Alt+4)
     const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+      if (e.ctrlKey && e.altKey && e.key === '4') {
+        e.preventDefault();
         setCurrentView('analytics');
       }
     };
