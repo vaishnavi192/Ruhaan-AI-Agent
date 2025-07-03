@@ -6,6 +6,3 @@ pydantic==2.5.0
 requests==2.31.0
 httpx==0.25.2
 imageio-ffmpeg==0.4.9
-ffmpeg-python==0.2.0
-sarvam==0.2.3
-moviepy==1.0.3
