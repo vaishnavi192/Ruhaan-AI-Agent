@@ -161,13 +161,14 @@ function App() {
       </div>
       
       <a 
-        href="https://tally.so/r/nPyo5V" 
+        href="https://docs.google.com/document/d/1pqtHUxhP_kYD09QKo3_fcbM1QO4PzAoT0BELTkFrz_4/edit?usp=sharing" 
         target="_blank" 
         rel="noopener noreferrer" 
         className="waitlist-button"
+        style={{ textDecoration: 'underline' }}
       >
         See Instructions to use Ruhaan
-      </a>
+    </a>
       
       {/* Vercel Analytics */}
       <Analytics />

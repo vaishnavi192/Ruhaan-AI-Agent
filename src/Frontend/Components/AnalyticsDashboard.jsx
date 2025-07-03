@@ -16,8 +16,8 @@ const AnalyticsDashboard = ({ onBack, onLogout }) => {
       setLoading(true);
       
       const [metricsResponse, summaryResponse] = await Promise.all([
-        fetch('http://localhost:8000/api/analytics/metrics'),
-        fetch('http://localhost:8000/api/analytics/summary')
+        fetch('https://ruhaan-336f0cf6b1b5.herokuapp.com/api/analytics/metrics'),
+        fetch('https://ruhaan-336f0cf6b1b5.herokuapp.com/api/analytics/summary')
       ]);
 
       if (metricsResponse.ok && summaryResponse.ok) {

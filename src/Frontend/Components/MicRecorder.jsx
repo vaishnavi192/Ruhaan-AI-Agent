@@ -3,7 +3,7 @@ import axios from "axios";
 import { playTTS } from "./playTTS";
 
 // --- Change this URL to your deployed Railway backend URL ---
-const API_BASE_URL = "http://127.0.0.1:8000"; // Fixed URL to match backend
+const API_BASE_URL = "https://ruhaan-336f0cf6b1b5.herokuapp.com/"; // Fixed URL to match backend
 // -----------------------------------------------------------
 
 const MicRecorder = ({ setMessages, isRecording, setIsRecording, analytics }) => {

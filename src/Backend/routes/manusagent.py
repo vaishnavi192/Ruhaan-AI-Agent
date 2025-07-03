@@ -9,6 +9,7 @@ import threading
 import time
 import asyncio
 import queue
+from src.Backend.sarvam import Sarvam
 import os
 import json
 import subprocess
@@ -20,10 +21,11 @@ try:
     import plyer
 except ImportError:
     plyer = None
-from src.Backend.config import sarvam_client
+from dotenv import load_dotenv
 
+load_dotenv()
 router = APIRouter()
-
+sarvam_client = Sarvam(api_key=os.getenv('SARVAM_API_KEY'))
 # Analytics tracking function
 async def track_command_analytics(command: str, command_type: str, success: bool = True):
     """Track command execution analytics"""

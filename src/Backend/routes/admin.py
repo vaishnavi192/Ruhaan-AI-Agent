@@ -5,6 +5,11 @@ from pydantic import BaseModel
 import json
 from datetime import datetime, timedelta
 import secrets
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 router = APIRouter()
 
@@ -13,9 +18,7 @@ class AdminLoginRequest(BaseModel):
 
 # Simple session storage (upgrade to Redis/database in production)
 admin_sessions = {}
-
-# Admin credentials
-ADMIN_PASSWORD = "ruhaan_admin_2025"
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
 SESSION_DURATION_HOURS = 24
 
 @router.get("/login", response_class=HTMLResponse)

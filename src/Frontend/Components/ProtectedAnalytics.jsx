@@ -40,7 +40,7 @@ const ProtectedAnalytics = ({ onBack }) => {
 
   const verifyAdminSession = async (sessionToken) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/admin/verify/${sessionToken}`);
+      const response = await fetch(`https://ruhaan-336f0cf6b1b5.herokuapp.com/api/admin/verify/${sessionToken}`);
       const data = await response.json();
       
       if (response.ok && data.valid) {

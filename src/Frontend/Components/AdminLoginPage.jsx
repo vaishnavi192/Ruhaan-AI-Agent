@@ -19,7 +19,7 @@ const AdminLoginPage = ({ onAuthSuccess }) => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:8000/api/admin/authenticate', {
+      const response = await fetch('https://ruhaan-336f0cf6b1b5.herokuapp.com//api/admin/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

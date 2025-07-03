@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://127.0.0.1:8000"; // Update if needed
+const API_BASE_URL = "https://ruhaan-336f0cf6b1b5.herokuapp.com"; // Update if needed
 
 export async function playTTS(text, language_code) {
   try {
