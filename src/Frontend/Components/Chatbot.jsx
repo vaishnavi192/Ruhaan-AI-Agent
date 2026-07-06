@@ -138,7 +138,7 @@ const Chatbot = ({ messages, setMessages }) => {
   };
 
   return (
-    <div className="chatbot-interface flex flex-col w-full h-full max-[900px]:h-auto max-[900px]:min-h-0 max-[900px]:overflow-visible">
+    <div className="chatbot-interface flex flex-col w-full h-full max-[900px]:h-auto max-[900px]:min-h-[70vh] max-[900px]:overflow-visible">
 
       <style>{`
         @keyframes fadeSlideUp {
@@ -202,7 +202,7 @@ const Chatbot = ({ messages, setMessages }) => {
       )}
 
       {/* Messages */}
-      <div className="chat-messages flex flex-col flex-1 overflow-y-auto px-4 pt-32 pb-4 max-[900px]:h-auto max-[900px]:flex-none max-[900px]:overflow-visible max-[900px]:pt-6 max-[900px]:pb-5">
+      <div className="chat-messages flex flex-col flex-1 overflow-y-auto px-4 pt-32 pb-4 max-[900px]:min-h-[52vh] max-[900px]:pt-6 max-[900px]:pb-5">
         {messages.map((msg, index) => (
           <div
             key={`${msg.sender}-${index}`}

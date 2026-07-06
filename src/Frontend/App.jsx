@@ -50,25 +50,6 @@ function App() {
           INDIAN-AI
         </div>
 
-        <nav className="hidden max-[900px]:flex w-full flex-nowrap items-center justify-center gap-1 px-1 pb-1 overflow-x-hidden">
-          {NAV_ITEMS.map(({ label, icon, view }) => (
-            <button
-              key={view}
-              onClick={() => setCurrentView(view)}
-              className={[
-                'inline-flex items-center justify-center gap-[0.3rem] flex-1 min-w-0',
-                'min-h-11 px-2.5 py-2 rounded-full border text-[0.72rem] font-bold cursor-pointer backdrop-blur-lg',
-                'transition-[transform,background,border-color,box-shadow] duration-180',
-                currentView === view
-                  ? 'bg-white/12 border-white/18 text-white'
-                  : 'bg-white/7 border-white/7 text-white hover:text-white/80 hover:bg-white/7',
-              ].join(' ')}
-            >
-              {icon} {label}
-            </button>
-          ))}
-        </nav>
-
         <div className="flex-1 w-full flex items-center justify-center py-2 box-border *:w-full *:max-w-full max-[900px]:max-w-105 max-[900px]:mx-auto max-[640px]:max-w-90">
           <IndiaMap selected={selectedState} onSelect={setSelectedState} />
         </div>
@@ -103,6 +84,25 @@ function App() {
         <main className="relative w-full h-full min-h-screen flex items-stretch justify-center p-[1.1rem_1.1rem_1.4rem] box-border [background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent_22%),rgba(0,0,0,0.18)] max-[900px]:min-h-0">
           {renderCurrentView()}
         </main>
+
+        <nav className="hidden max-[900px]:flex w-full flex-nowrap items-center justify-center gap-1 px-3 pb-3 pt-2 overflow-x-hidden bg-[linear-gradient(180deg,rgba(17,17,17,0),rgba(17,17,17,0.82)_30%)]">
+          {NAV_ITEMS.map(({ label, icon, view }) => (
+            <button
+              key={view}
+              onClick={() => setCurrentView(view)}
+              className={[
+                'inline-flex items-center justify-center gap-[0.3rem] flex-1 min-w-0',
+                'min-h-11 px-2.5 py-2 rounded-full border text-[0.72rem] font-bold cursor-pointer backdrop-blur-lg',
+                'transition-[transform,background,border-color,box-shadow] duration-180',
+                currentView === view
+                  ? 'bg-white/12 border-white/18 text-white'
+                  : 'bg-white/7 border-white/7 text-white hover:text-white/80 hover:bg-white/7',
+              ].join(' ')}
+            >
+              {icon} {label}
+            </button>
+          ))}
+        </nav>
       </div>
 
       <StatePopup stateName={selectedState} onClose={() => setSelectedState(null)} />
