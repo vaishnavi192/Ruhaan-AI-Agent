@@ -12,22 +12,6 @@ const Chatbot = ({ messages, setMessages }) => {
     }
   }, [messages]);
 
-  function showToast(message) {
-    const toast = document.createElement("div");
-    toast.innerText = message;
-    toast.style.position = "fixed";
-    toast.style.bottom = "30px";
-    toast.style.right = "30px";
-    toast.style.background = "#333";
-    toast.style.color = "#fff";
-    toast.style.padding = "12px 24px";
-    toast.style.borderRadius = "8px";
-    toast.style.zIndex = 9999;
-    toast.style.fontSize = "1.1em";
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.remove(); }, 5000);
-  }
-
   const handleSendMessage = async (messageText, languageCode = null) => {
     const userMessage = { text: messageText, sender: "user" };
     setMessages((prev) => [...prev, userMessage]);
@@ -67,7 +51,7 @@ const Chatbot = ({ messages, setMessages }) => {
       if (typeof data === "string") {
         try {
           data = JSON.parse(data);
-        } catch (e) {
+        } catch {
           console.error("Failed to parse stringified data:", data);
         }
       }
@@ -140,7 +124,7 @@ const Chatbot = ({ messages, setMessages }) => {
                 <ul className="mt-2 space-y-1">
                   {content.key_points.map((point, index) => (
                     <li key={index} className="text-xs text-white/45 flex gap-2 items-start">
-                      <span className="mt-1.5 w-1 h-1 rounded-full bg-white/30 flex-shrink-0" />
+                      <span className="mt-1.5 w-1 h-1 rounded-full bg-white/30 shrink-0" />
                       {point}
                     </li>
                   ))}
@@ -154,7 +138,7 @@ const Chatbot = ({ messages, setMessages }) => {
   };
 
   return (
-    <div className="chatbot-interface flex flex-col w-full h-full">
+    <div className="chatbot-interface flex flex-col w-full h-full max-[900px]:h-auto max-[900px]:min-h-0 max-[900px]:overflow-visible">
 
       <style>{`
         @keyframes fadeSlideUp {
@@ -218,7 +202,7 @@ const Chatbot = ({ messages, setMessages }) => {
       )}
 
       {/* Messages */}
-      <div className="chat-messages flex flex-col flex-1 overflow-y-auto px-4 pt-32 pb-4">
+      <div className="chat-messages flex flex-col flex-1 overflow-y-auto px-4 pt-32 pb-4 max-[900px]:h-auto max-[900px]:flex-none max-[900px]:overflow-visible max-[900px]:pt-6 max-[900px]:pb-5">
         {messages.map((msg, index) => (
           <div
             key={`${msg.sender}-${index}`}
@@ -227,7 +211,7 @@ const Chatbot = ({ messages, setMessages }) => {
           >
             {/* Bot avatar */}
             {msg.sender === "bot" && (
-              <div className="w-7 h-7 rounded-full bg-white/8 border border-white/10 flex items-center justify-center text-[8px] font-bold text-white/50 flex-shrink-0 mb-0.5 transition-transform duration-200 hover:scale-110">
+              <div className="w-7 h-7 rounded-full bg-white/8 border border-white/10 flex items-center justify-center text-[8px] font-bold text-white/50 shrink-0 mb-0.5 transition-transform duration-200 hover:scale-110">
                 I₹
               </div>
             )}
@@ -251,7 +235,7 @@ const Chatbot = ({ messages, setMessages }) => {
         {/* Typing indicator */}
         {isLoading && (
           <div className="msg-appear flex items-end gap-3">
-            <div className="w-7 h-7 rounded-full bg-white/8 border border-white/10 flex items-center justify-center text-[8px] font-bold text-white/50 flex-shrink-0">
+            <div className="w-7 h-7 rounded-full bg-white/8 border border-white/10 flex items-center justify-center text-[8px] font-bold text-white/50 shrink-0">
               I₹
             </div>
             <div className="flex gap-1.5 items-center bg-white/8 border border-white/10 px-5 py-3.5 rounded-2xl rounded-bl-sm">

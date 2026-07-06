@@ -3,7 +3,6 @@ import { geoMercator, geoPath, type GeoPermissibleObjects } from "d3-geo";
 import { STATES } from "./indiaData.ts";
 import geo from "./indiastates.json";
 
-
 type Feature = {
   type: "Feature";
   properties: { name: string };
@@ -30,16 +29,27 @@ const colorFor = (name: string) => {
   return PALETTE[h % PALETTE.length];
 };
 
-export default function IndiaMap({ onSelect }: { onSelect: (name: string) => void }) {
+export default function IndiaMap({
+  onSelect,
+}: {
+  onSelect: (name: string) => void;
+}) {
   const [geoData] = useState(geo);
   const [hover, setHover] = useState<string | null>(null);
 
-
-
   const { paths, width, height } = useMemo(() => {
-    if (!geo) return { paths: [] as { d: string; name: string; active: boolean }[], width: 800, height: 800 };
-    const W = 800, H = 800;
-    const proj = geoMercator().fitSize([W, H], geo as unknown as GeoPermissibleObjects);
+    if (!geo)
+      return {
+        paths: [] as { d: string; name: string; active: boolean }[],
+        width: 800,
+        height: 800,
+      };
+    const W = 800,
+      H = 800;
+    const proj = geoMercator().fitSize(
+      [W, H],
+      geo as unknown as GeoPermissibleObjects,
+    );
     const pathGen = geoPath(proj);
     const paths = geo.features.map((f) => ({
       d: pathGen(f as unknown as GeoPermissibleObjects) ?? "",
@@ -58,7 +68,10 @@ export default function IndiaMap({ onSelect }: { onSelect: (name: string) => voi
   }
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto select-none">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      className="block mx-auto w-full h-auto select-none"
+    >
       <defs>
         <filter id="state-shadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.15" />
@@ -84,7 +97,10 @@ export default function IndiaMap({ onSelect }: { onSelect: (name: string) => voi
             onMouseLeave={() => setHover(null)}
             onClick={() => p.active && onSelect(p.name)}
           >
-            <title>{p.name}{p.active ? "" : " (coming soon)"}</title>
+            <title>
+              {p.name}
+              {p.active ? "" : " (coming soon)"}
+            </title>
           </path>
         );
       })}
